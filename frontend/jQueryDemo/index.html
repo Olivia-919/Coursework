@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo1</title>
+  <script src="js/jquery-3.1.0.js"></script>
+
+  <script>
+    // window.onload = function() { ... };
+    // window.addEventListener('load', function() { ... });
+    $(document).ready(function () {
+      // document.getElementById('btn1').onclick = function() {
+      //   console.log($("#para").text());
+      //   console.log($(".myclass").text());
+      //   console.log($("h4").text());
+      // };
+      // document.getElementById('btn1').addEventListener('click', function() {
+      //   console.log($("#para").text());
+      //   console.log($(".myclass").text());
+      //   console.log($("h4").text());
+      // });
+      $("#btn1").click(function () {
+        console.log($("#para").text());
+        console.log($(".myclass").text());
+        console.log($("h4").text());
+      });
+      $("#btn2").click(function () {
+        $("#para").text("<p>This first paragraph is changed</p>"); // text does not take HTML tags
+        $(".myclass").html("<p>This second paragraph is changed</p>")
+        $("h4").text("the header is changed");
+        document.getElementById("para2").innerHTML = "<b>last paragraph is changed</b>";
+      });
+      $("#btn3").click(function () {
+        console.log($("li:first").text());
+        console.log($("li:last").text());
+        $("li:odd").each(function (index, item) {
+          console.log($(item).text());
+          $(item).css("color", "red");
+        });
+        $("li:even").each(function (index, item) {
+          console.log($(item).text());
+          $(item).css("color", "blue");
+        })
+
+        var url = $("a[target='_blank']");
+        console.log(url.text());
+        url.attr("href", "http://www.yahoo.com");	//to change the attribute
+        url.attr('data-name', '这是一个自定义属性');
+        console.log(url.attr('data-name'));
+        console.log("foo by attr: " + $(this).attr("foo"));
+        console.log("foo by prop: " + $(this).prop("foo"));	//(self's shu xing)you can not see user define 
+        console.log("foo by id: " + $(this).prop("id"))
+
+      });
+    });
+  </script>
+  <style>
+    .btn {
+      padding: 5px 15px;
+      border-radius: 6px;
+      line-height: 20px;
+      border: 1px solid;
+      cursor: pointer;
+      background: orange;
+    }
+    .btn-primary {
+      background: #2da44e;
+      color: #ffffff;
+      border-color: #1b1f2426;
+    }
+    .btn-primary:hover {
+      background: #2c974b;
+      border-color: #1b1f2426;
+    }
+    .btn-secondary {}
+  </style>
+
+</head>
+
+<body>
+  <div class="container">
+    <h1>JQuery Selectors</h1>
+    <hr>
+    <div>
+      <h2>Basic Selector</h2>
+      <p id="para">Select this paragraph by 10</p>
+      <p class="myclass">Select this paragraph by Class</p>
+      <p class="myclass">Select this paragraph by Class 222222222</p>
+      <h4>Select this header by Tag Name</h4>
+      <p id="para2">This is another paragraph</p>
+      <button class="btn btn-primary" id="btn1">Select</button>
+      <button class="btn btn-secondary" id="btn2">Change</button>
+    </div>
+    <hr>
+    <div>
+      <h2>Advanced Selector</h2>
+      <div>
+        <h4>无序</h4>
+        <ul>
+          <li>芭芭拉</li>
+          <li>Item2</li>
+          <li>Item3</li>
+          <li>Item4</li>
+          <li><a href="http://www.google.com" target="_blank">Google</a></li>
+        </ul>
+        <h4>有序</h4>
+        <ol>
+          <li>Item1</li>
+          <li>Item2</li>
+          <li>Item3</li>
+          <li>Item4</li>
+          <li><a href="http://www.google.com" target="_blank">胡若兰儿</a></li>
+        </ol>
+        <button class="btn btn-default" id="btn3" foo="bar">Select Items</button>
+      </div>
+      <hr>
+      <div>
+        <p class="x">Java and J2EE</p>
+        <p class="x">HTML, CSS and Bootstrap</p>
+        <p class="x">Angular Js and Node</p>
+        <p class="x">SQL and PL/SQL</p>
+        <p>
+          State:
+          <select id="state">
+            <option value=""></option>
+            <option value="NJ">New Jersy</option>
+            <option value="NY">New York</option>
+            <option value="MD">MaryLand</option>
+          </select>
+        </p>
+        <button class="btn btn-warning" id="btn4">Select Paragraph</button>
+      </div>
+
+    </div>
+    <div style="margin: 10px">
+      <button id="search1" class="btn btn-primary">Find Parent</button>
+      <button id="search2" class="btn btn-primary">Find Children</button>
+    </div>
+
+
+</body>
+
+</html>
