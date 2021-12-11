@@ -6,16 +6,35 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>论坛</title>
+  <link rel="stylesheet" href="./lib//css//global.css">
   <link rel="stylesheet" href="./lib//css/modal.css">
+  <script src="//at.alicdn.com/t/font_3006614_vb72nh1shsa.js"></script>
   <script src="./lib//js/modal.js"></script>
 </head>
 
 <body>
   <button id="luntan-login" style="display: block;">登录</button>
+
   <script>
+    const loginHtml = `
+      <form id="luntan_login_form">
+        <div>用户名</div>
+        <input name="login_user" />
+        <div>密码</div>
+        <input type="password" name="login_password" /> 
+        <div>
+          <button id="login_btn">登录</button>
+          <button id="register_btn">注册</button>
+        </div>
+      </form>
+    `;
+
     window.addEventListener('load', function() {
       document.getElementById('luntan-login').onclick = function() {
-        modalConfig();
+        modalConfig({
+          title: '登录',
+          content: loginHtml
+        });
       };
     });
   </script>

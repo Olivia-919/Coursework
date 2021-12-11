@@ -10,8 +10,41 @@
 
 /* modal 内容区 */
 .modal-content {
+  position: relative;
   background: #fff;
   min-height: 200px;
   border-radius: 6px;
   box-shadow: 0 0 1px 0 rgb(0 0 0 / 8%), 0 0 5px 0 rgb(0 0 0 / 8%);
+  /* 上 右 下 左 */
+  margin: 0 auto;
+  top: 15vh;
+}
+
+/* modal 内容区 头部 */
+.modal-content-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px;
+  border-bottom: 1px solid #f3f3f4;
+  height: 59px;
+}
+/* 标题 */
+.modal-content-head .modal-content-title {
+  color: #000002;
+  font-size: 18px;
+}
+/* 关闭icon */
+.modal-content-head .modal-content-close {
+  color: #a5a5a5;
+  font-size: 24px;
+  cursor: pointer;
+}
+.modal-content-head .modal-content-close:hover {
+  color: #646464;
+}
+
+/* modal 内容区 body */
+.modal-content-body {
+  padding: 18px;
 }
