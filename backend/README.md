@@ -12,4 +12,7 @@ flask-sqlacodegen --flask --outfile <输出到哪个文件> <数据库连接URI>
 e.g.
 flask-sqlacodegen --flask --outfile app/models.py mysql+pymsql://username:password@localhost:3306/dbname
 
+# 激活虚拟环境
+source venv/bin/activate
+
 ```
