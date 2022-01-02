@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {{ bootstrap.load_css() }}
-    <link rel="stylesheet" href="static/global.css" />
+    {% block css_source %}{% endblock %}
+    <link rel="stylesheet" href="static/css/global.css" />
     <title>{{ title }}</title>
   </head>
 
@@ -37,7 +38,7 @@
                         <a class="nav-link" href="https://github.com/greyli/bootstrap-flask" target="_blank">GitHub</a>
                     </li>
                 </ul> -->
-          <form class="form-inline mt-2 mt-md-0">
+          <!-- <form class="form-inline mt-2 mt-md-0">
             <input
               class="form-control mr-sm-2"
               type="text"
@@ -47,17 +48,20 @@
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
               Search
             </button>
-          </form>
-          {% if current_user.is_anonymous %}
-          <button id="glLoginBtn" type="button" class="btn btn-link">
-            登录
-          </button>
-          {% else %}
+          </form> -->
+        </div>
+        <div class="navbar-right">
+          {% if current_user.is_authenticated %}
+          <span>Hi, {{ current_user.name }}</span>
           <button id="glLogoutBtn" type="button" class="btn btn-link">
             注销
           </button>
+          {% else %}
+          <button id="glLoginBtn" type="button" class="btn btn-link">
+            登录
+          </button>
+          <a class="btn btn-primary" href="/register">去注册</a>
           {% endif %}
-          <a class="btn btn-outline-primary" href="/register">去注册</a>
         </div>
       </nav>
     </header>
@@ -70,6 +74,7 @@
       </div>
     </footer>
 
+    <!-- 登录表单 start -->
     <div
       class="modal fade"
       id="loginModal"
@@ -93,6 +98,7 @@
           </div>
           <div class="modal-body">
             <form id="loginForm" class="needs-validation" novalidate>
+              <div id="login-feedback"></div>
               <div class="form-group">
                 <label for="recipient-name" class="col-form-label"
                   >用户名</label
@@ -145,99 +151,14 @@
         </div>
       </div>
     </div>
-
+    <!-- 登录表单 end -->
+    
+    {{ bootstrap.load_js() }}
+    <script src="static/lib/moment.min.js"></script>
     <script>
       const _token = "{{ csrf_token() }}";
-      window.onload = function () {
-        const form = document.getElementById("loginForm");
-        $("#glLoginBtn").click(function () {
-          $("#loginModal").modal();
-        });
-
-        $("#loginModal").on("hidden.bs.modal", function (e) {
-          // 清空表单
-          $("#name").val("");
-          $("#password").val("");
-        });
-
-        function validateForm() {
-          return new Promise((resolve, reject) => {
-            let flag = true;
-            if (form.checkValidity() === false) {
-              flag = false;
-            }
-
-            const nameVal = $("#name").val();
-            const pwdVal = $("#password").val();
-
-            if (nameVal) {
-              $("#name").removeClass("is-invalid");
-            } else {
-              $("#name").addClass("is-invalid");
-              flag = false;
-            }
-
-            if (pwdVal ) {
-              $("#password").removeClass("is-invalid");
-            } else {
-              $("#password").addClass("is-invalid");
-              flag = false;
-            }
-
-            if (flag) {
-              resolve();
-            } else {
-              reject();
-            }
-          });
-        }
-
-        $("#modalLoginBtn").click((e) => {
-          e.preventDefault();
-          validateForm().then(() => {
-            $("#modalLoginBtn").attr("disabled", true);
-            $("#submit_loading").css("display", "inline-block");
-            const f = new FormData(form);
-            f.set('remember', $('#remember').get(0).checked);
-            fetch("/login", {
-              method: "POST",
-              body: f,
-              headers: {
-                "X-CSRFToken": _token,
-              },
-            }).then((r) => {
-              return r.json()
-            }).then(r => {
-              console.log(r);
-              $("#submit_loading").css("display", "none");
-              $("#modalLoginBtn").attr("disabled", false);
-              if (r.success) {
-                // 跳到首页
-                window.location.href = '/';
-              }
-            })
-          });
-        });
-
-        $('#glLogoutBtn').click(() => {
-          fetch("/logout", {
-            method: "POST",
-            headers: {
-              "X-CSRFToken": _token,
-            },
-          }).then((r) => {
-            return r.json()
-          }).then(r => {
-            console.log(r);
-            if (r.success) {
-              // 跳到首页
-              window.location.href = '/';
-            }
-          })
-        })
-      };
     </script>
-
-    {{ bootstrap.load_js() }}
+    <script src="static/js/base.js"></script>
+    {% block js_source %}{% endblock %}
   </body>
 </html>

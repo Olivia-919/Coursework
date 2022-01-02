@@ -1,0 +1,29 @@
+.topic-wrap {
+    min-height: 100px;
+}
+.topic-linka {
+    display: block;
+}
+.topic-linka:hover {
+    text-decoration: none;
+}
+.topic-card {
+    line-height: 1.4rem;
+    background: #f8f6f2;
+    color: #8e887a;
+    padding: calc(.65rem + 1px) calc(1.25rem + 1px);
+    transition: color .2s ease,background-color .2s ease;
+    border-radius: .475rem;
+}
+.topic-card:hover {
+    background: #f6f1e9!important;
+}
+.topic-card-name {
+    margin-bottom: .5rem;
+}
+.topic-line {
+    /* display: flex;
+    justify-content: space-between;
+    align-items: center; */
+    font-size: .4rem;
+}

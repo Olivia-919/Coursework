@@ -17,7 +17,7 @@
             <h2>注册账号</h2>
         </div>
 
-        <div class="row">
+        <div class="row justify-content-center">
             <div class="col-md-8">
                 <form id="register-form" class="needs-validation" novalidate>
                     <div class="mb-3">
@@ -130,7 +130,7 @@
                             fd.delete('sex');
                         }
                         fetch(
-                            '/register',
+                            '/api/register',
                             {
                                 method: 'POST',
                                 body: fd,

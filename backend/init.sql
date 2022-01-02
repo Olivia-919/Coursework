@@ -37,6 +37,7 @@ CREATE TABLE `t_reply`  (
 CREATE TABLE `t_topic`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键 自增',
   `name` varchar(100) NULL COMMENT '主题标题',
+  `desc` varchar(300) NULL COMMENT '主题描述',
   `creator_id` bigint NULL COMMENT '创建者ID',
   `is_delete` int NULL DEFAULT 0 COMMENT '是否删除 1-是 0-否',
   `gmt_create` datetime NULL COMMENT '创建时间',

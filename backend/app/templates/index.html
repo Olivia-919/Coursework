@@ -1,5 +1,87 @@
-{% extends 'base.html' %}
-
-{% block content %}
-ceshi
+{% extends 'base.html' %} {% block css_source %}
+<link rel="stylesheet" href="static/css/index.css" />
+{% endblock %} {% block content %}
+<div class="topic-wrap">
+  <div id="topic-loading" class="spinner-border text-primary" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <button id="topic-empty-add" class="btn btn-primary mb-3" style="display: none;">创建主题</button>
+  <div id="topiclist-wrap" class="row"></div>
+</div>
+<!-- 创建主题 start -->
+<div
+  class="modal fade"
+  id="addTopicModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="addTopicModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addTopicModalLabel">创建主题</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="addTopicForm" class="needs-validation" novalidate>
+          <div id="addTopic-feedback"></div>
+          <div class="form-group">
+            <label for="topic-name" class="col-form-label">主题名称</label>
+            <input
+              type="text"
+              class="form-control"
+              id="topic-name"
+              name="name"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="topic-desc">主题描述</label>
+            <textarea
+              class="form-control"
+              id="topic-desc"
+              name="desc"
+              rows="3"
+            ></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          关闭
+        </button>
+        <button id="addTopicSubmitBtn" type="button" class="btn btn-primary">
+          <span
+            id="topic-submit-loading"
+            class="spinner-border spinner-border-sm"
+            style="display: none"
+          ></span>
+          登录
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 创建主题 end -->
+<script type="text/html" id="oneTopicCardTemplate">
+  <a class="col-sm-12 col-md-4 col-lg-3 topic-linka" href="/topic/[topicId]">
+    <div class="topic-card mb-3">
+      <div class="text-truncate topic-card-name">[topicName]</div>
+      <div class="topic-line">
+        <div class="text-muted topic-card-date">更新时间: [topicDate]</div>
+        <div class="text-muted topic-card-person">创建人: [topicPerson]</div>
+      </div>
+    </div>
+  </a>
+</script>
+{% endblock %} {% block js_source %}
+<script src="static/js/index.js"></script>
 {% endblock %}

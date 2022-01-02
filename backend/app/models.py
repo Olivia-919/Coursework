@@ -55,14 +55,28 @@ class TTopic(db.Model):
 
     id = db.Column(db.BigInteger, primary_key=True, info='主键 自增')
     name = db.Column(db.String(100), info='主题标题')
+    desc = db.Column(db.String(300), info='主题描述')
     creator_id = db.Column(db.BigInteger, info='创建者ID')
     is_delete = db.Column(db.Integer, server_default=db.FetchedValue(), info='是否删除 1-是 0-否')
     gmt_create = db.Column(db.DateTime, default=datetime.datetime.now, info='创建时间')
     gmt_modify = db.Column(db.DateTime, default=datetime.datetime.now, info='更新时间')
 
+    def to_json(self):
+        '''将实例对象转换为json'''
+        item = self.__dict__
+        if '_sa_instance_state' in item:
+            del item['_sa_instance_state']
+        return item
+
 
 
 class TUser(UserMixin, db.Model):
+
+    # is_authenticated: 一个用来表示用户是否通过登录认证的属性，用True和False表示。
+    # is_active: 如果用户账户是活跃的，那么这个属性是True，否则就是False（译者注：活跃用户的定义是该用户的登录状态是否通过用户名密码登录，通过“记住我”功能保持登录状态的用户是非活跃的）。
+    # is_anonymous: 常规用户的该属性是False，对特定的匿名用户是True。
+    # get_id(): 返回用户的唯一id的方法，返回值类型是字符串(Python 2下返回unicode字符串).
+
     __tablename__ = 't_user'
 
     id = db.Column(db.BigInteger, primary_key=True, info='主键 自增')
