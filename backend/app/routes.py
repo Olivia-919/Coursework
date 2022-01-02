@@ -9,16 +9,23 @@ from app.models import TUser, TTopic
 
 user = { 'username': 'ruo-lan', 'age': 20, 'addr': 'cheng-du' }
 
+# 【页面】首页
 @app.route('/')
 @app.route('/index')
 def main_index():
     return render_template('index.html', title='声明详情')
 
+# 【页面】注册页面
 @app.route('/register')
 def register_index():
     return render_template('/register.html', title="注册用户")
 
-# 注册
+# 【页面】主题详情
+@app.route('/topic/<topicid>')
+def topic_index(topicid):
+    return render_template('/topic.html', title="主题-")
+
+# 【api】注册
 @app.route('/api/register', methods=['POST'])
 def register_post():
     f = request.form.to_dict()
@@ -28,7 +35,7 @@ def register_post():
     return_dict = { 'code': 200, 'success': True }
     return jsonify(return_dict)
 
-# 登录
+# 【api】登录
 @app.route('/api/login', methods=['POST'])
 def login_post():
     f = request.form.to_dict()
@@ -40,13 +47,13 @@ def login_post():
     else:
         return jsonify({ 'code': 200, 'success': False, 'message': '用户名或者密码错误' })
 
-# 登出
+# 【api】登出
 @app.route('/api/logout', methods=['POST'])
 def logout_post():
     logout_user()
     return jsonify({ 'code': 200, 'success': True })
 
-# 创建主题
+# 【api】创建主题
 @app.route('/api/addTopic', methods=['POST'])
 def add_topic():
     f = request.form.to_dict()
@@ -54,7 +61,7 @@ def add_topic():
     db.session.add(topic)
     db.session.commit()
     return jsonify({ 'code': 200, 'success': True })
-# 查询主题列表
+# 【api】查询主题列表
 @app.route('/api/queryTopics', methods=['GET'])
 def query_topics():
     topics = db.session.query(TTopic).order_by(TTopic.gmt_modify.desc()).filter_by(is_delete=0).all()

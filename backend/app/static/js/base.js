@@ -1,4 +1,4 @@
-window.onload = function () {
+addEventLoad(function () {
     const form = document.getElementById("loginForm");
     $("#glLoginBtn").click(function () {
       $("#loginModal").modal();
@@ -93,4 +93,4 @@ window.onload = function () {
         }
       })
     })
-  };
+  })

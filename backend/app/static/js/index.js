@@ -1,4 +1,4 @@
-window.onload = function () {
+addEventLoad(function () {
   const form = document.getElementById('addTopicForm');
   const scriptTemplateReg = new RegExp("\\[([^\\[\\]]*?)\\]", 'igm'); //i g m是指分别用于指定区分大小写的匹配、全局匹配和多行匹配。
   function fetchTopicServer() {
@@ -10,21 +10,22 @@ window.onload = function () {
         if (r.success) {
           $('#topic-loading').hide();
           if (!Array.isArray(r.data) || r.data.length === 0) {
-            $('#topiclist-wrap').html('<div class="topic-empty">暂无主题，<button id="topic-empty-add" class="btn btn-primary">创建一个</button></div>')
+            $('#topic-empty-mess').html('<div class="topic-empty">暂无主题</div>')
           } else {
-            $('#topic-empty-add').show();
             const cardliststr = r.data.map(item => {
               const ht = $('#oneTopicCardTemplate').html();
               const source = ht.replace(scriptTemplateReg, function (node, key) {
                 return {
                   'topicId': item.id,
                   'topicName': item.name,
-                  'topicDate': moment(item.gmt_modify).format('YYYY-MM-DD HH:mm:ss'),
+                  'topicDate': moment.utc(item.gmt_modify).format('YYYY-MM-DD HH:mm:ss'),
                   'topicPerson': item.creator_id
                 }[key];
               });
               return source;
             })
+            $('#topic-empty-add').show();
+            $('#topic-empty-mess').html('');
             $('#topiclist-wrap').html(cardliststr.join(''))
           }
           // 打开创建主题 modal
@@ -102,4 +103,4 @@ window.onload = function () {
       })
     });
   });
-}
+})

@@ -4,9 +4,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    {{ bootstrap.load_css() }}
-    {% block css_source %}{% endblock %}
-    <link rel="stylesheet" href="static/css/global.css" />
+    {{ bootstrap.load_css() }} {% block css_source %}{% endblock %}
+    <link rel="stylesheet" href="/static/css/global.css" />
     <title>{{ title }}</title>
   </head>
 
@@ -123,7 +122,12 @@
               </div>
               <div class="form-group">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="remember"
+                    name="remember"
+                  />
                   <label class="form-check-label" for="remember">
                     记住我
                   </label>
@@ -152,13 +156,24 @@
       </div>
     </div>
     <!-- 登录表单 end -->
-    
+
     {{ bootstrap.load_js() }}
-    <script src="static/lib/moment.min.js"></script>
+    <script src="/static/lib/moment.min.js"></script>
     <script>
       const _token = "{{ csrf_token() }}";
+      function addEventLoad(func) {
+        const oldOnload = window.onload;
+        if (typeof window.onload !== "function") {
+          window.onload = func;
+        } else {
+          window.onload = function () {
+            oldOnload();
+            func();
+          };
+        }
+      }
     </script>
-    <script src="static/js/base.js"></script>
+    <script src="/static/js/base.js"></script>
     {% block js_source %}{% endblock %}
   </body>
 </html>
