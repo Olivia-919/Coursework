@@ -12,6 +12,12 @@
 
 <body class="bg-light">
     <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb" style="margin-top: 2.5rem">
+              <li class="breadcrumb-item"><a href="/">首页</a></li>
+              <li class="breadcrumb-item active" aria-current="page">注册账号</li>
+            </ol>
+          </nav>
         <div class="py-5 text-center">
             <!-- <img class="d-block mx-auto mb-4" src="../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
             <h2>注册账号</h2>
@@ -129,23 +135,27 @@
                         if (!fd.get('sex')) {
                             fd.delete('sex');
                         }
-                        fetch(
-                            '/api/register',
-                            {
-                                method: 'POST',
-                                body: fd,
-                                headers: {
-                                    'X-CSRFToken': _token
+                        setTimeout(function() {
+                            fetch(
+                                '/api/register',
+                                {
+                                    method: 'POST',
+                                    body: fd,
+                                    headers: {
+                                        'X-CSRFToken': _token
+                                    }
                                 }
-                            }
-                        ).then(r => {
-                            $('#submit_loading').css('display', 'none');
-                            $('#register_submit').attr('disabled', false);
-                            if (r.success) {
-                                // 跳到首页 window.location.href = '/';
-                                $('#message_wrap').html('<div class="alert alert-success" role="alert">注册成功！</div>');
-                            }
-                        })
+                            )
+                                .then(r => r.json())
+                                .then(r => {
+                                    $('#submit_loading').css('display', 'none');
+                                    $('#register_submit').attr('disabled', false);
+                                    if (r.success) {
+                                        // 跳到首页 window.location.href = '/';
+                                        $('#message_wrap').html('<div class="alert alert-success" role="alert">注册成功！</div>');
+                                    }
+                                })
+                        }, 1000)
                     })
             })
         }
