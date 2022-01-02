@@ -95,6 +95,10 @@ class TUser(UserMixin, db.Model):
     avatar = db.Column(db.String(1000), info='头像地址')
     status = db.Column(db.Integer, info='用户状态 1-正常 2-锁定 3-注销')
 
+    def __init__(self, obj):
+        for k in obj:
+            setattr(self, k, obj[k])
+
     def to_json(self):
         '''将实例对象转换为json'''
         item = self.__dict__

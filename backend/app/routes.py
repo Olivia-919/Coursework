@@ -6,6 +6,7 @@ from werkzeug.utils import redirect
 from app import app, db
 import json
 from app.models import TUser, TTopic, TClaim
+from app.base_models import Dict
 
 user = { 'username': 'ruo-lan', 'age': 20, 'addr': 'cheng-du' }
 
@@ -57,9 +58,9 @@ def api_topic_detail():
 @app.route('/api/register', methods=['POST'])
 def api_register_post():
     f = request.form.to_dict()
-
-    # db.session.add(u)
-    # db.session.commit()
+    u = TUser(f)
+    db.session.add(u)
+    db.session.commit()
     return_dict = { 'code': 200, 'success': True }
     return jsonify(return_dict)
 
