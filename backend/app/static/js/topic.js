@@ -33,7 +33,7 @@ addEventLoad(function() {
               $('#claims-list').html('');
             } else {
               const cardliststr = children.map(item => {
-                const ht = $('#oneTopicCardTemplate').html();
+                const ht = $('#topic-claims-template').html();
                 const source = ht.replace(scriptTemplateReg, function (node, key) {
                   return {
                     'claimName': item.name,

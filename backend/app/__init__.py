@@ -14,4 +14,8 @@ login = LoginManager(app)
 
 bootstrap = Bootstrap(app)
 
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db.session.remove()
+
 from app import routes, models

@@ -9,7 +9,7 @@ addEventLoad(function () {
         if (r.success) {
           $('#topic-loading').hide();
           if (!Array.isArray(r.data) || r.data.length === 0) {
-            $('#topic-empty-mess').html('暂无主题')
+            $('#topic-empty-mess').show();
           } else {
             const cardliststr = r.data.map(item => {
               const ht = $('#oneTopicCardTemplate').html();
@@ -24,6 +24,7 @@ addEventLoad(function () {
               return source;
             })
             $('#topic-empty-mess').html('');
+            $('#topic-empty-mess').hide();
             $('#topiclist-wrap').html(cardliststr.join(''))
           }
           $('#topic-empty-add').show();
