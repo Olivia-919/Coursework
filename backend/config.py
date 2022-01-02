@@ -11,3 +11,5 @@ class Config(object):
     )
     SQLALCHEMY_TRACK_MODIFICATIONS=False
     TEMPLATES_AUTO_RELOAD=True
+    JSONIFY_MIMETYPE = 'application/json;charset=utf-8'
+    JSON_AS_ASCII = False

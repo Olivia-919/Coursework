@@ -5,7 +5,7 @@ from flask_login.utils import login_user, logout_user, current_user
 from werkzeug.utils import redirect
 from app import app, db
 import json
-from app.models import TUser, TTopic
+from app.models import TUser, TTopic, TClaim
 
 user = { 'username': 'ruo-lan', 'age': 20, 'addr': 'cheng-du' }
 
@@ -21,13 +21,41 @@ def register_index():
     return render_template('/register.html', title="注册用户")
 
 # 【页面】主题详情
-@app.route('/topic/<topicid>')
-def topic_index(topicid):
+@app.route('/topic')
+def topic_index():
     return render_template('/topic.html', title="主题-")
+
+# 【api】主题详情
+@app.route('/api/topic', methods=['GET'])
+def api_topic_detail():
+    topid = request.args.get('id')
+    success = False
+    message = ''
+    respData = None
+    if topid:
+        # 查询主题详情
+        tp = db.session.query(TTopic).filter_by(id=topid).first()
+        if tp:
+            tpjson = tp.to_json()
+            # 查询关联的声明
+            claims = db.session.query(TClaim).filter_by(topic_id=topid, is_delete=0).all()
+            claimlist = []
+            for claim in claims:
+                claimlist.append(claim.to_json())
+            tpjson['children'] = claimlist
+            success = True
+            respData = tpjson
+        else:
+            message = '暂无数据'
+    else:
+        message = '缺少查询ID'
+        
+    return jsonify({ 'code': 200, 'success': success, 'message': message, 'data': respData })
+
 
 # 【api】注册
 @app.route('/api/register', methods=['POST'])
-def register_post():
+def api_register_post():
     f = request.form.to_dict()
 
     # db.session.add(u)
@@ -37,7 +65,7 @@ def register_post():
 
 # 【api】登录
 @app.route('/api/login', methods=['POST'])
-def login_post():
+def api_login_post():
     f = request.form.to_dict()
     isRemember = f['remember']
     u_info = TUser.query.filter_by(name=f['name'], password=f['password']).first()
@@ -49,13 +77,13 @@ def login_post():
 
 # 【api】登出
 @app.route('/api/logout', methods=['POST'])
-def logout_post():
+def api_logout_post():
     logout_user()
     return jsonify({ 'code': 200, 'success': True })
 
 # 【api】创建主题
 @app.route('/api/addTopic', methods=['POST'])
-def add_topic():
+def api_add_topic():
     f = request.form.to_dict()
     topic = TTopic(name=f['name'], desc=f['desc'], is_delete=0, creator_id=current_user.id)
     db.session.add(topic)
@@ -63,11 +91,10 @@ def add_topic():
     return jsonify({ 'code': 200, 'success': True })
 # 【api】查询主题列表
 @app.route('/api/queryTopics', methods=['GET'])
-def query_topics():
+def api_query_topics():
     topics = db.session.query(TTopic).order_by(TTopic.gmt_modify.desc()).filter_by(is_delete=0).all()
     topiclist = []
     for topic in topics:
-        print(topic)
         topiclist.append(topic.to_json())
     return jsonify({ 'code': 200, 'success': True, 'data': topiclist })
 

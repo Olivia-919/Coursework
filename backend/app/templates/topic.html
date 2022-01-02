@@ -1,14 +1,17 @@
-{% extends 'base.html' %}
-{% block css_source %}
+{% extends 'base.html' %} {% block css_source %}
 <link rel="stylesheet" href="/static/css/topic.css" />
-{% endblock %}
-
-{% block content %}
-<div class="topic-detail-wrap">
-
+{% endblock %} {% block content %}
+<div id="topic-detail-wrap" class="topic-detail-wrap">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">首页</a></li>
+      <li class="breadcrumb-item active" aria-current="page">主题详情</li>
+    </ol>
+  </nav>
+  <div id="topic-loading" class="spinner-border text-primary" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
 </div>
-{% endblock %}
-
-{% block js_source %}
+{% endblock %} {% block js_source %}
 <script src="/static/js/topic.js"></script>
 {% endblock %}

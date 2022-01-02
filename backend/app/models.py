@@ -20,6 +20,13 @@ class TClaim(db.Model):
     gmt_create = db.Column(db.DateTime, default=datetime.datetime.now, info='创建时间')
     gmt_modify = db.Column(db.DateTime, default=datetime.datetime.now, info='更新时间')
 
+    def to_json(self):
+        '''将实例对象转换为json'''
+        item = self.__dict__
+        if '_sa_instance_state' in item:
+            del item['_sa_instance_state']
+        return item
+
 
 
 class TClaimsRel(db.Model):
