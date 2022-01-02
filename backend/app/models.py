@@ -1,6 +1,8 @@
 # coding: utf-8
 from flask_sqlalchemy import SQLAlchemy
 import datetime
+from flask_login import UserMixin
+from app import login
 
 db = SQLAlchemy()
 
@@ -60,7 +62,7 @@ class TTopic(db.Model):
 
 
 
-class TUser(db.Model):
+class TUser(UserMixin, db.Model):
     __tablename__ = 't_user'
 
     id = db.Column(db.BigInteger, primary_key=True, info='主键 自增')
@@ -71,3 +73,14 @@ class TUser(db.Model):
     gmt_modify = db.Column(db.DateTime, default=datetime.datetime.now, info='更新时间')
     avatar = db.Column(db.String(1000), info='头像地址')
     status = db.Column(db.Integer, info='用户状态 1-正常 2-锁定 3-注销')
+
+    def to_json(self):
+        '''将实例对象转换为json'''
+        item = self.__dict__
+        if '_sa_instance_state' in item:
+            del item['_sa_instance_state']
+        return item
+
+@login.user_loader
+def load_user(id):
+    return TUser.query.get(int(id))

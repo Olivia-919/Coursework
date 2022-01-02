@@ -1,34 +1,47 @@
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/utils.html' import render_messages %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{ bootstrap.load_css() }}
     <title>{{ title }}</title>
 </head>
 <body>
-    <h1>她的名字是 {{ user.username }}</h1>
-    {% if user.addr %}
-    <h2>她住在 {{ user.addr }}</h2>
-    {% endif %}
-    <div>
+    <!-- <div>
         <a style="margin-right: 8px;" href="/index">home</a>
         <a href="/about">about</a>
-    </div>
+    </div> -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" href="https://bootstrap-flask.readthedocs.io/" target="_blank">Documentation</a></li>
+                <li class="nav-item"><a class="nav-link" href="https://getbootstrap.com/docs/4.6/getting-started/introduction/" target="_blank">Bootstrap Documentation</a></li>
+                <li class="nav-item"><a class="nav-link" href="https://github.com/greyli/bootstrap-flask" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
     <button id="addTest">添加一个测试人员</button>
     <button id="selectTest">查询</button>
     {% block content %}{% endblock %}
 
+    {{ bootstrap.load_js() }}
     <script>
         window.onload = function() {
             document.getElementById('addTest').onclick = function() {
-                fetch('/add', { method: 'post' })
+                fetch('/demo/add', { method: 'post', headers: { 'Content-type': 'application/json' }  })
                     .then(r => {
                         console.log(r.json())
                     })
             }
             document.getElementById('selectTest').onclick = function() {
-                fetch('/select')
+                fetch('/demo/select')
                     .then(r => {
                         console.log(r.json())
                     })

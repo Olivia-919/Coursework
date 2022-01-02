@@ -10,3 +10,4 @@ class Config(object):
         dbname='coursework'
     )
     SQLALCHEMY_TRACK_MODIFICATIONS=False
+    TEMPLATES_AUTO_RELOAD=True
