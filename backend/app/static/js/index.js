@@ -27,10 +27,6 @@ addEventLoad(function () {
             $('#topiclist-wrap').html(cardliststr.join(''))
           }
           $('#topic-empty-add').show();
-          // 打开创建主题 modal
-          $('#topic-empty-add').click(function () {
-            $("#addTopicModal").modal();
-          });
         }
       })
   }
@@ -101,5 +97,9 @@ addEventLoad(function () {
         }
       })
     });
+  });
+  // 打开创建主题 modal
+  $('#topic-empty-add').click(function () {
+    $("#addTopicModal").modal();
   });
 })
