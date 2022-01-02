@@ -24,7 +24,16 @@ def register_index():
 # 【页面】主题详情
 @app.route('/topic')
 def topic_index():
-    return render_template('/topic.html', title="主题-")
+    return render_template('/topic.html', title="主题")
+
+# 【api】新增声明
+@app.route('/api/addClaim', methods=['POST'])
+def api_add_claim():
+    f = request.form.to_dict()
+    c = TClaim(name=f['name'], content=f['content'], topic_id=f['topicId'], is_delete=0, creator_id=current_user.id)
+    db.session.add(c)
+    db.session.commit()
+    return jsonify({ 'code': 200, 'success': True })
 
 # 【api】主题详情
 @app.route('/api/topic', methods=['GET'])
@@ -52,7 +61,6 @@ def api_topic_detail():
         message = '缺少查询ID'
         
     return jsonify({ 'code': 200, 'success': success, 'message': message, 'data': respData })
-
 
 # 【api】注册
 @app.route('/api/register', methods=['POST'])

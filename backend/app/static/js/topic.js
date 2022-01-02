@@ -1,6 +1,7 @@
 addEventLoad(function() {
+  const form = document.getElementById('addClaimForm');
+  const queryId = getQueryVariable('id');
   function fetchTopicServer() {
-    const queryId = getQueryVariable('id');
     if (queryId === false) {
       return false;
     }
@@ -11,6 +12,7 @@ addEventLoad(function() {
       .then(r => {
         if (r.success) {
           $('#topic-loading').hide();
+          $('#add-claim-btn').show();
           if (!r.data) {
             $('#topic-empty-mess').html('<div class="topic-empty">暂无主题</div>')
           } else {
@@ -59,5 +61,71 @@ addEventLoad(function() {
   }
   setTimeout(function () {
     fetchTopicServer();
-  }, 1000)
+  }, 500)
+
+  // 登录表单校验
+  function validateForm() {
+    return new Promise((resolve, reject) => {
+      let flag = true;
+      if (form.checkValidity() === false) {
+        flag = false;
+      }
+      const nameVal = $("#claim-name").val();
+      if (nameVal) {
+        $("#claim-name").removeClass("is-invalid");
+      } else {
+        $("#claim-name").addClass("is-invalid");
+        flag = false;
+      }
+      if (flag) {
+        resolve();
+      } else {
+        reject();
+      }
+    });
+  }
+  // 发表声明表单
+  $("#addClaimSubmitBtn").click((e) => {
+    e.preventDefault();
+    validateForm().then(() => {
+      $("#addTopicSubmitBtn").attr("disabled", true);
+      $("#topic-submit-loading").css("display", "inline-block");
+      const f = new FormData(form);
+      f.set('topicId', queryId);
+      fetch("/api/addClaim", {
+        method: "POST",
+        body: f,
+        headers: {
+          "X-CSRFToken": _token,
+        },
+      })
+      .then((r) => r.json())
+      .then(r => {
+        $("#topic-submit-loading").css("display", "none");
+        // $("#addTopicSubmitBtn").attr("disabled", false);
+        if (r.success) {
+          $('#addClaim-feedback').html(`<div class="alert alert-success" role="alert">保存成功，自动关闭此弹窗...</div>`);
+          setTimeout(() => {
+            $("#addClaimModal").modal('hide');
+            fetchTopicServer();
+          }, 1000)
+
+        } else {
+          $('#addClaim-feedback').html(`<div class="alert alert-danger" role="alert">${r.message}</div>`);
+        }
+      })
+    });
+  });
+
+  $("#addClaimModal").on("hidden.bs.modal", function (e) {
+    // 清空表单
+    $("#claim-name").val("");
+    $("#topic-desc").val("");
+    $("#claim-name").removeClass("is-invalid");
+    $('#addClaim-feedback').html('');
+    $("#addClaimSubmitBtn").attr("disabled", false);
+  });
+  $('#add-claim-btn').click(function() {
+    $("#addClaimModal").modal();
+  });
 });

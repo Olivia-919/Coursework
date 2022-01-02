@@ -33,7 +33,7 @@ addEventLoad(function () {
   }
   setTimeout(function () {
     fetchTopicServer();
-  }, 1000)
+  }, 500)
 
   $("#addTopicModal").on("hidden.bs.modal", function (e) {
     // 清空表单
@@ -94,7 +94,7 @@ addEventLoad(function () {
           }, 1000)
 
         } else {
-          $('#login-feedback').html(`<div class="alert alert-danger" role="alert">${r.message}</div>`);
+          $('#addTopic-feedback').html(`<div class="alert alert-danger" role="alert">${r.message}</div>`);
         }
       })
     });

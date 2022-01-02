@@ -10,17 +10,61 @@
   </nav>
   <div><span id="topic-empty-mess"></span></div>
   <div id="topic-detail-cnt"></div>
-  <div id="topic-loading" class="spinner-border text-primary" role="status">
+  <div id="topic-loading" class="spinner-border text-primary mb-3" role="status">
     <span class="sr-only">Loading...</span>
   </div>
+
+  {% if current_user.is_authenticated %}
+  <button id="add-claim-btn" class="btn btn-primary mb-3" style="display: none;">
+    发表声明
+  </button>
+  {% endif %}
   
   <!-- 声明列表容器 -->
   <div id="claims-list" class="list-group" style="margin-bottom: 1rem;"></div>
 </div>
 
+<!-- 创建声明 start -->
+<div class="modal fade" id="addClaimModal" tabindex="-1" role="dialog" aria-labelledby="addClaimModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addTopicModalLabel">发表声明</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="addClaimForm" class="needs-validation" novalidate>
+          <div id="addClaim-feedback"></div>
+          <div class="form-group">
+            <label for="claim-name" class="col-form-label">声明标题</label>
+            <input placeholder="必填" type="text" class="form-control" id="claim-name" name="name" required/>
+          </div>
+          <div class="form-group">
+            <label for="topic-desc">声明内容</label>
+            <textarea placeholder="可选" class="form-control" id="topic-desc" name="content" rows="3"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          关闭
+        </button>
+        <button id="addClaimSubmitBtn" type="button" class="btn btn-primary">
+          <span id="claim-submit-loading" class="spinner-border spinner-border-sm" style="display: none"></span>
+          登录
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 创建声明 end -->
+
 <!-- 主题详情 模板 -->
 <script id="topic-detail-template" type="text/html">
-  <h3 class="md-2">[topicName]</h3>
+  <h3 class="mb-3">[topicName]</h3>
   <p class="topic-desc">[topicDesc]</p>
   <p class="text-muted">
     <small style="margin-right: 6px;">创建人: [topicCreator]</small>
