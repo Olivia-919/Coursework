@@ -11,24 +11,44 @@ addEventLoad(function() {
       .then(r => {
         if (r.success) {
           $('#topic-loading').hide();
-          if (!Array.isArray(r.data) || r.data.length === 0) {
+          if (!r.data) {
             $('#topic-empty-mess').html('<div class="topic-empty">暂无主题</div>')
           } else {
-            const cardliststr = r.data.map(item => {
-              const ht = $('#oneTopicCardTemplate').html();
-              const source = ht.replace(scriptTemplateReg, function (node, key) {
-                return {
-                  'topicId': item.id,
-                  'topicName': item.name,
-                  'topicDate': moment.utc(item.gmt_modify).format('YYYY-MM-DD HH:mm:ss'),
-                  'topicPerson': item.creator_id
-                }[key];
-              });
-              return source;
-            })
-            $('#topic-empty-add').show();
+            // 详情
+            const { data } = r;
+            const { children } = data;
+            const ht = $('#topic-detail-template').html();
+            const htSource = ht.replace(scriptTemplateReg, function (node, key) {
+              return {
+                'topicName': data.name,
+                'topicDesc': data.desc,
+                'topicDate': moment.utc(data.gmt_modify).format('YYYY-MM-DD HH:mm:ss'),
+                'topicCreator': data.creator_id
+              }[key];
+            });
+            $('#topic-detail-cnt').html(htSource);
+
+            // 声明列表
+            if (!Array.isArray(children) || children.length === 0) {
+              $('#claims-list').html('');
+            } else {
+              const cardliststr = children.map(item => {
+                const ht = $('#oneTopicCardTemplate').html();
+                const source = ht.replace(scriptTemplateReg, function (node, key) {
+                  return {
+                    'claimName': item.name,
+                    'claimReplyCount': 100,
+                    'claimDate': moment.utc(item.gmt_modify).format('YYYY-MM-DD HH:mm:ss'),
+                    'claimCreator': item.creator_id,
+                    'claimContent': item.content
+                  }[key];
+                });
+                return source;
+              })
+              $('#claims-list').html(cardliststr.join(''))
+            }
+            
             $('#topic-empty-mess').html('');
-            $('#topiclist-wrap').html(cardliststr.join(''))
           }
           // 打开创建主题 modal
           $('#topic-empty-add').click(function () {
@@ -37,6 +57,7 @@ addEventLoad(function() {
         }
       })
       .catch(error => {
+        console.error(error);
         $('#topic-loading').hide();
       })
   }

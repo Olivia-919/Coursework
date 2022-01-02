@@ -8,10 +8,41 @@
       <li class="breadcrumb-item active" aria-current="page">主题详情</li>
     </ol>
   </nav>
+  <div><span id="topic-empty-mess"></span></div>
+  <div id="topic-detail-cnt"></div>
   <div id="topic-loading" class="spinner-border text-primary" role="status">
     <span class="sr-only">Loading...</span>
   </div>
+  
+  <!-- 声明列表容器 -->
+  <div id="claims-list" class="list-group"></div>
 </div>
+
+<!-- 主题详情 模板 -->
+<script id="topic-detail-template" type="text/html">
+  <h3 class="md-2">[topicName]</h3>
+  <p class="topic-desc">[topicDesc]</p>
+  <p class="text-muted">
+    <small style="margin-right: 6px;">创建人: [topicCreator]</small>
+    <small>更新时间: [topicDate]</small>
+  </p>
+</script>
+
+<!-- 声明列表单项 模板 -->
+<script id="topic-claims-template" type="text/html">
+  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+    <div class="d-flex w-100 justify-content-between align-items-center">
+      <h5 class="mb-1">[claimName]</h5>
+      <!-- <small>3 days ago</small> -->
+      <span class="badge badge-primary badge-pill">[claimReplyCount]</span>
+    </div>
+    <p class="mb-1">[claimContent]</p>
+    <span class="text-muted">
+      <small style="margin-right: 6px;">发帖人: [claimCreator]</small>
+      <small>更新时间: [claimDate]</small>
+    </span>
+  </a>
+</script>
 {% endblock %} {% block js_source %}
 <script src="/static/js/topic.js"></script>
 {% endblock %}

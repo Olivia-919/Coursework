@@ -161,6 +161,7 @@
     <script src="/static/lib/moment.min.js"></script>
     <script>
       const _token = "{{ csrf_token() }}";
+      const scriptTemplateReg = new RegExp("\\[([^\\[\\]]*?)\\]", 'igm'); //i g m是指分别用于指定区分大小写的匹配、全局匹配和多行匹配。
       // 绑定多个 onload 事件
       function addEventLoad(func) {
         const oldOnload = window.onload;

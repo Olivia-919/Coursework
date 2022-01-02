@@ -1,6 +1,5 @@
 addEventLoad(function () {
   const form = document.getElementById('addTopicForm');
-  const scriptTemplateReg = new RegExp("\\[([^\\[\\]]*?)\\]", 'igm'); //i g m是指分别用于指定区分大小写的匹配、全局匹配和多行匹配。
   function fetchTopicServer() {
     fetch('/api/queryTopics', {
       method: 'GET',
