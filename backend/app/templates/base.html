@@ -13,7 +13,7 @@
     <header>
       <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
         <a class="navbar-brand" href="#">辩论论坛</a>
-        <button
+        <!-- <button
           class="navbar-toggler"
           type="button"
           data-toggle="collapse"
@@ -23,7 +23,7 @@
           aria-label="Toggle navigation"
         >
           <span class="navbar-toggler-icon"></span>
-        </button>
+        </button> -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <!-- <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
@@ -49,7 +49,7 @@
             </button>
           </form> -->
         </div>
-        <div class="navbar-right">
+        <div class="navbar-right nav-top-right-ops">
           {% if current_user.is_authenticated %}
           <span>Hi, {{ current_user.name }}</span>
           <button id="glLogoutBtn" type="button" class="btn btn-link">

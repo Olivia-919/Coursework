@@ -9,7 +9,7 @@ addEventLoad(function () {
         if (r.success) {
           $('#topic-loading').hide();
           if (!Array.isArray(r.data) || r.data.length === 0) {
-            $('#topic-empty-mess').html('<div class="topic-empty">暂无主题</div>')
+            $('#topic-empty-mess').html('暂无主题')
           } else {
             const cardliststr = r.data.map(item => {
               const ht = $('#oneTopicCardTemplate').html();

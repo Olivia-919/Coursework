@@ -1,3 +1,7 @@
 .footer {
     background: #f5f5f5;
 }
+.nav-top-right-ops {
+    display: flex;
+    align-items: center;
+}

@@ -5,14 +5,14 @@
   <div id="topic-loading" class="spinner-border text-primary" role="status">
     <span class="sr-only">Loading...</span>
   </div>
+  {% if current_user.is_authenticated %}
   <div class="mb-3">
-    <span id="topic-empty-mess"></span>
-    {% if current_user.is_authenticated %}
     <button id="topic-empty-add" class="btn btn-primary" style="display: none">
       创建主题
     </button>
-    {% endif %}
   </div>
+  {% endif %}
+  <div id="topic-empty-mess" class="index-empty-wrap"></div>
   <div id="topiclist-wrap" class="row"></div>
 </div>
 <!-- 创建主题 start -->

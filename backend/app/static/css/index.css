@@ -1,3 +1,7 @@
+.index-empty-wrap {
+    text-align: center;
+    padding: 4rem 0;
+}
 .topic-wrap {
     min-height: 100px;
 }
