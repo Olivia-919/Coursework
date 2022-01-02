@@ -23,10 +23,10 @@ addEventLoad(function () {
               });
               return source;
             })
-            $('#topic-empty-add').show();
             $('#topic-empty-mess').html('');
             $('#topiclist-wrap').html(cardliststr.join(''))
           }
+          $('#topic-empty-add').show();
           // 打开创建主题 modal
           $('#topic-empty-add').click(function () {
             $("#addTopicModal").modal();

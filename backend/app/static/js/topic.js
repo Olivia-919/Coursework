@@ -50,10 +50,6 @@ addEventLoad(function() {
             
             $('#topic-empty-mess').html('');
           }
-          // 打开创建主题 modal
-          $('#topic-empty-add').click(function () {
-            $("#addTopicModal").modal();
-          });
         }
       })
       .catch(error => {
