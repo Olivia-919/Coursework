@@ -38,8 +38,9 @@ addEventLoad(function() {
                 const ht = $('#topic-claims-template').html();
                 const source = ht.replace(scriptTemplateReg, function (node, key) {
                   return {
+                    'claimId': item.id,
                     'claimName': item.name,
-                    'claimReplyCount': 100,
+                    'claimReplyCount': item.replyCount,
                     'claimDate': moment.utc(item.gmt_modify).format('YYYY-MM-DD HH:mm:ss'),
                     'claimCreator': item.creator_id,
                     'claimContent': item.content

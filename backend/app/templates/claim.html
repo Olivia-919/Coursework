@@ -1,0 +1,99 @@
+{% extends 'base.html' %} {% block css_source %}
+<link rel="stylesheet" href="/static/css/claim.css" />
+{% endblock %} {% block content %}
+<div id="claim-detail-wrap" class="claim-detail-wrap">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">首页</a></li>
+      <li class="breadcrumb-item active" aria-current="page">声明详情</li>
+    </ol>
+  </nav>
+  <div><span id="claim-empty-mess"></span></div>
+  <div id="claim-detail-cnt"></div>
+  <div id="claim-loading" class="spinner-border text-primary mb-3" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+
+  {% if current_user.is_authenticated %}
+  <button id="add-reply-btn" class="btn btn-primary mb-3" style="display: none;">
+    发表评论
+  </button>
+  {% endif %}
+  
+  <!-- 评论列表容器 -->
+  <div id="reply-list" class="list-group" style="margin-bottom: 1rem;"></div>
+</div>
+
+<!-- 发表评论弹窗 start -->
+<div class="modal fade" id="addReplyModal" tabindex="-1" role="dialog" aria-labelledby="addReplyModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addReplyModalLabel">发表评论</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="addReplyForm" class="needs-validation" novalidate>
+          <div id="addReply-feedback"></div>
+          <input type="hidden" name="topicId" id="topicId" />
+          <div class="form-group">
+            <label for="reply-cnt">内容</label>
+            <textarea placeholder="必填" class="form-control" id="reply-cnt" name="content" rows="3" required></textarea>
+          </div>
+          <fieldset class="form-group">
+            <legend class="col-form-label">观点</legend>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="idea" id="inlineRadio1" value="1" required>
+              <label class="form-check-label" for="inlineRadio1">澄清</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="idea" id="inlineRadio2" value="2" required>
+              <label class="form-check-label" for="inlineRadio2">支持</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="idea" id="inlineRadio3" value="3" required>
+              <label class="form-check-label" for="inlineRadio3">反对</label>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          关闭
+        </button>
+        <button id="addReplySubmitBtn" type="button" class="btn btn-primary">
+          <span id="reply-submit-loading" class="spinner-border spinner-border-sm" style="display: none"></span>
+          提交
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 创建声明 end -->
+
+<!-- 声明详情 模板 -->
+<script id="claim-detail-template" type="text/html">
+  <h3 class="mb-3">[claimName]</h3>
+  <p class="claim-desc">[claimContent]</p>
+  <p class="text-muted">
+    <small style="margin-right: 6px;">创建人: [claimCreator]</small>
+    <small>更新时间: [claimDate]</small>
+  </p>
+</script>
+
+<!-- 评论列表单项 模板 -->
+<script id="claim-reply-template" type="text/html">
+  <div class="list-group-item list-group-item-action flex-column align-items-start">
+    <p class="mb-1">[replyContent]</p>
+    <span class="text-muted">
+      <small style="margin-right: 6px;">评论人: [replyCreator]</small>
+      <small>评论时间: [replyDate]</small>
+    </span>
+  </div>
+</script>
+{% endblock %} {% block js_source %}
+<script src="/static/js/claim.js"></script>
+{% endblock %}

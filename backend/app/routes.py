@@ -5,28 +5,55 @@ from flask_login.utils import login_user, logout_user, current_user
 from werkzeug.utils import redirect
 from app import app, db
 import json
-from app.models import TUser, TTopic, TClaim
+from app.models import TUser, TTopic, TClaim, TReply
 from app.base_models import Dict
 
 user = { 'username': 'ruo-lan', 'age': 20, 'addr': 'cheng-du' }
 
-# 【页面】首页
+#【页面】首页
 @app.route('/')
 @app.route('/index')
 def main_index():
-    return render_template('index.html', title='声明详情')
+    return render_template('index.html', title='辩论论坛')
 
-# 【页面】注册页面
+#【页面】注册页面
 @app.route('/register')
 def register_index():
     return render_template('/register.html', title="注册用户")
 
-# 【页面】主题详情
+#【页面】主题详情
 @app.route('/topic')
 def topic_index():
     return render_template('/topic.html', title="主题")
 
-# 【api】新增声明
+#【页面】声明详情
+@app.route('/claim')
+def claim_index():
+    return render_template('/claim.html', title="声明")
+
+#【api】发表评论
+@app.route('/api/addReply', methods=['POST'])
+def api_add_reply():
+    f = request.form.to_dict()
+    c = TReply(
+        content=f['content'],
+        topic_id=f['topicId'],
+        claim_id=f['claimId'],
+        reply_id=f.get('replyId', None),
+        idea=f['idea'],
+        is_delete=0,
+        creator_id=current_user.id
+        )
+    # type 1-评论 2-回复
+    if c.reply_id:
+        c.type = 2
+    else:
+        c.type = 1
+    db.session.add(c)
+    db.session.commit()
+    return jsonify({ 'code': 200, 'success': True })
+
+#【api】新增声明
 @app.route('/api/addClaim', methods=['POST'])
 def api_add_claim():
     f = request.form.to_dict()
@@ -35,7 +62,35 @@ def api_add_claim():
     db.session.commit()
     return jsonify({ 'code': 200, 'success': True })
 
-# 【api】主题详情
+#【api】声明详情
+@app.route('/api/claim', methods=['GET'])
+def api_claim_detail():
+    claimId = request.args.get('id')
+    success = False
+    message = ''
+    respData = None
+    if claimId:
+        # 查询声明详情
+        tp = db.session.query(TClaim).filter_by(id=claimId).first()
+        if tp:
+            tpjson = tp.to_json()
+            # 查询关联的评论
+            replies = db.session.query(TReply).filter_by(claim_id=claimId, is_delete=0).all()
+            replylist = []
+            for reply in replies:
+                replylist.append(reply.to_json())
+            tpjson['children'] = replylist
+            success = True
+            respData = tpjson
+        else:
+            success = True
+            message = '暂无数据'
+    else:
+        message = '缺少查询ID'
+        
+    return jsonify({ 'code': 200, 'success': success, 'message': message, 'data': respData })
+
+#【api】主题详情
 @app.route('/api/topic', methods=['GET'])
 def api_topic_detail():
     topid = request.args.get('id')
@@ -47,11 +102,20 @@ def api_topic_detail():
         tp = db.session.query(TTopic).filter_by(id=topid).first()
         if tp:
             tpjson = tp.to_json()
+            sql = "select a.id, a.name, a.content, a.creator_id, a.topic_id, a.gmt_modify, count(b.id) as replyCount from t_claim a left join t_reply b on a.id = b.claim_id and b.is_delete = 0 where a.is_delete = 0 and a.topic_id = {topicid} group by a.id order by a.gmt_modify desc".format(topicid=int(topid))
             # 查询关联的声明
-            claims = db.session.query(TClaim).filter_by(topic_id=topid, is_delete=0).all()
+            claims = db.session.execute(sql).fetchall()
             claimlist = []
-            for claim in claims:
-                claimlist.append(claim.to_json())
+            for (id, name, content, creator_id, topic_id, gmt_modify, replyCount) in claims:
+                claimlist.append({
+                    'id': id,
+                    'name': name,
+                    'content': content,
+                    'creator_id': creator_id,
+                    'topic_id': topic_id,
+                    'gmt_modify': gmt_modify,
+                    'replyCount': replyCount
+                })
             tpjson['children'] = claimlist
             success = True
             respData = tpjson
@@ -143,9 +207,7 @@ def select():
     users = TUser.query.all()
     for user in users:
         # 通过遍历结果集 将每一个实例转为 json
-        print(user)
         userlist.append(user.to_json())
-    # print(userlist)
     return_dict = { 'code': 200, 'success': True, 'data': userlist }
     # return json.dumps(return_dict, ensure_ascii=False)
     return jsonify(return_dict)

@@ -54,7 +54,7 @@
         </button>
         <button id="addClaimSubmitBtn" type="button" class="btn btn-primary">
           <span id="claim-submit-loading" class="spinner-border spinner-border-sm" style="display: none"></span>
-          登录
+          提交
         </button>
       </div>
     </div>
@@ -74,7 +74,7 @@
 
 <!-- 声明列表单项 模板 -->
 <script id="topic-claims-template" type="text/html">
-  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+  <a href="/claim?id=[claimId]" class="list-group-item list-group-item-action flex-column align-items-start">
     <div class="d-flex w-100 justify-content-between align-items-center">
       <h5 class="mb-1">[claimName]</h5>
       <!-- <small>3 days ago</small> -->
