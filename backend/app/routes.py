@@ -217,7 +217,12 @@ def api_add_topic():
 # 【api】查询主题列表
 @app.route('/api/queryTopics', methods=['GET'])
 def api_query_topics():
-    topics = db.session.query(TTopic).order_by(TTopic.gmt_modify.desc()).filter_by(is_delete=0).all()
+    keyword = request.args.get('q')
+    filters = [TTopic.is_delete==0]
+    if keyword:
+        k = '%' + keyword + '%'
+        filters.append(TTopic.name.like(k))
+    topics = db.session.query(TTopic).filter(*filters).order_by(TTopic.gmt_modify.desc()).all()
     topiclist = []
     for topic in topics:
         topiclist.append(topic.to_json())

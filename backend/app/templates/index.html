@@ -2,16 +2,24 @@
 <link rel="stylesheet" href="/static/css/index.css" />
 {% endblock %} {% block content %}
 <div class="topic-wrap">
-  <div id="topic-loading" class="spinner-border text-primary" role="status">
-    <span class="sr-only">Loading...</span>
-  </div>
   {% if current_user.is_authenticated %}
-  <div class="mb-3">
-    <button id="topic-empty-add" class="btn btn-primary" style="display: none">
+  <div class="mb-3 index-search-wrap">
+    <div class="search-wrap">
+      <input id="search-text" class="form-control" style="margin-right: .5rem;" />
+      <button id="index-search-btn" type="button" class="btn btn-secondary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+        </svg>
+      </button>
+    </div>
+    <button id="topic-empty-add" class="btn btn-primary">
       创建主题
     </button>
   </div>
   {% endif %}
+  <div id="topic-loading" class="spinner-border text-primary" role="status" style="display: none;">
+    <span class="sr-only">Loading...</span>
+  </div>
   <div id="topic-empty-mess" class="index-empty-wrap" style="display: none;">暂无主题</div>
   <div id="topiclist-wrap" class="row"></div>
 </div>

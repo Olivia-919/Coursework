@@ -31,3 +31,15 @@
     align-items: center; */
     font-size: .4rem;
 }
+
+.search-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.index-search-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

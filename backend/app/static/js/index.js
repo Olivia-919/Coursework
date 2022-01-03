@@ -1,39 +1,43 @@
 addEventLoad(function () {
   const form = document.getElementById('addTopicForm');
   function fetchTopicServer() {
-    fetch('/api/queryTopics', {
-      method: 'GET',
-    })
-      .then(r => r.json())
-      .then(r => {
-        if (r.success) {
-          $('#topic-loading').hide();
-          if (!Array.isArray(r.data) || r.data.length === 0) {
-            $('#topic-empty-mess').show();
-          } else {
-            const cardliststr = r.data.map(item => {
-              const ht = $('#oneTopicCardTemplate').html();
-              const source = ht.replace(scriptTemplateReg, function (node, key) {
-                return {
-                  'topicId': item.id,
-                  'topicName': item.name,
-                  'topicDate': moment.utc(item.gmt_modify).format('YYYY-MM-DD HH:mm:ss'),
-                  'topicPerson': item.creator_id
-                }[key];
-              });
-              return source;
-            })
-            $('#topic-empty-mess').html('');
-            $('#topic-empty-mess').hide();
-            $('#topiclist-wrap').html(cardliststr.join(''))
-          }
-          $('#topic-empty-add').show();
-        }
+    $('#topiclist-wrap').html('');
+    $('#topic-loading').show();
+    const v = $('#search-text').val();
+    let qt = v && v.trim() ? `?q=${v.trim()}` : '';
+    setTimeout(function () {
+      fetch(`/api/queryTopics${qt}`, {
+        method: 'GET',
       })
+        .then(r => r.json())
+        .then(r => {
+          if (r.success) {
+            $('#topic-loading').hide();
+            if (!Array.isArray(r.data) || r.data.length === 0) {
+              $('#topic-empty-mess').show();
+            } else {
+              const cardliststr = r.data.map(item => {
+                const ht = $('#oneTopicCardTemplate').html();
+                const source = ht.replace(scriptTemplateReg, function (node, key) {
+                  return {
+                    'topicId': item.id,
+                    'topicName': item.name,
+                    'topicDate': moment.utc(item.gmt_modify).format('YYYY-MM-DD HH:mm:ss'),
+                    'topicPerson': item.creator_id
+                  }[key];
+                });
+                return source;
+              })
+              $('#topic-empty-mess').html('');
+              $('#topic-empty-mess').hide();
+              $('#topiclist-wrap').html(cardliststr.join(''))
+            }
+            $('#topic-empty-add').show();
+          }
+        })
+    }, 500)
   }
-  setTimeout(function () {
-    fetchTopicServer();
-  }, 500)
+  fetchTopicServer();
 
   $("#addTopicModal").on("hidden.bs.modal", function (e) {
     // 清空表单
@@ -103,4 +107,9 @@ addEventLoad(function () {
   $('#topic-empty-add').click(function () {
     $("#addTopicModal").modal();
   });
+
+  // 搜索
+  $('#index-search-btn').click(function() {
+    fetchTopicServer();
+  })
 })
