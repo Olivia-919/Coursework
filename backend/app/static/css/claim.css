@@ -2,3 +2,33 @@
     font-size: 1rem;
     margin-bottom: 0.5rem;
 }
+
+.reply-ops-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;   
+}
+.reply-count-wrap {
+    cursor: pointer;
+    transition: color .3s;
+}
+.reply-count-wrap:hover {
+    color: #5d6164 !important;
+}
+
+.list-group-item-action:active {
+    background: #f8f9fa !important;
+}
+
+.reply-divider {
+    height: 10px;
+    background-color: #f6f6f6;
+}
+
+.reply-reply-list-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid #dee2e6;
+}
+.reply-reply-list-item:last-child {
+    border-bottom: none;
+}

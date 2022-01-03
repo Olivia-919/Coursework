@@ -62,6 +62,58 @@ def api_add_claim():
     db.session.commit()
     return jsonify({ 'code': 200, 'success': True })
 
+#【api】评论详情
+@app.route('/api/reply', methods=['GET'])
+def api_reply_detail():
+    replyId = request.args.get('id')
+    success = False
+    message = ''
+    respData = None
+    if replyId:
+        tp = db.session.query(TReply).filter_by(id=replyId).first()
+        if tp:
+            tpjson = tp.to_json()
+            sql ="""
+            select a.*, b.creator_id as reply_person_id from (
+                select a.id, a.content, a.creator_id, a.topic_id, a.claim_id, a.reply_id, a.type, a.idea, a.gmt_modify from t_reply a inner join (
+                    select id from (
+                        select t1.id,t1.reply_id,
+                        if(find_in_set(t1.reply_id, @pids) > 0, @pids := concat(@pids, ',', t1.id), 0) as ischild
+                        from (
+                                select id, reply_id from t_reply t where t.is_delete = 0 order by reply_id, id
+                                ) t1,
+                                (select @pids := {replyId}) t2
+                    ) t3 where ischild != 0
+                ) b on a.id = b.id order by a.gmt_modify desc
+            ) a LEFT JOIN t_reply b on a.reply_id = b.id
+            """.format(replyId=int(replyId))
+            # 查询关联的回复
+            replies = db.session.execute(sql).fetchall()
+            replylist = []
+            for (id, content, creator_id, topic_id, claim_id, reply_id, type, idea, gmt_modify, reply_person_id) in replies:
+                replylist.append({
+                    'id': id,
+                    'content': content,
+                    'creator_id': creator_id,
+                    'topic_id': topic_id,
+                    'claim_id': claim_id,
+                    'reply_id': reply_id,
+                    'type': type,
+                    'idea': idea,
+                    'gmt_modify': gmt_modify,
+                    'reply_person_id': reply_person_id,
+                })
+            tpjson['children'] = replylist
+            success = True
+            respData = tpjson
+        else:
+            success = True
+            message = '暂无数据'
+    else:
+        message = '缺少查询ID'
+
+    return jsonify({ 'code': 200, 'success': success, 'message': message, 'data': respData })
+
 #【api】声明详情
 @app.route('/api/claim', methods=['GET'])
 def api_claim_detail():
@@ -75,7 +127,7 @@ def api_claim_detail():
         if tp:
             tpjson = tp.to_json()
             # 查询关联的评论
-            replies = db.session.query(TReply).filter_by(claim_id=claimId, is_delete=0).all()
+            replies = db.session.query(TReply).order_by(TReply.gmt_modify.desc()).filter_by(claim_id=claimId, type=1, is_delete=0).all()
             replylist = []
             for reply in replies:
                 replylist.append(reply.to_json())

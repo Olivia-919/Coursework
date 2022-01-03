@@ -2,9 +2,10 @@
 <link rel="stylesheet" href="/static/css/claim.css" />
 {% endblock %} {% block content %}
 <div id="claim-detail-wrap" class="claim-detail-wrap">
+  <input type="hidden" id="topicId" />
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="/">首页</a></li>
+      <li id="claim-nav-index" class="breadcrumb-item"><a href="/">首页</a></li>
       <li class="breadcrumb-item active" aria-current="page">声明详情</li>
     </ol>
   </nav>
@@ -72,7 +73,59 @@
     </div>
   </div>
 </div>
-<!-- 创建声明 end -->
+<!-- 发表评论弹窗 end -->
+
+<!-- 查看回复弹窗 start -->
+<div class="modal fade" id="lookReplyModal" tabindex="-1" role="dialog" aria-labelledby="lookReplyModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="lookReplyModalLabel">查看回复</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="lookReplyModalBody" class="modal-body">
+        {% if current_user.is_authenticated %}
+        <form id="addReplyReplyForm" class="needs-validation" novalidate>
+          <div id="addReply-feedback"></div>
+          <input type="hidden" name="replyId" id="reply-reply-id" />
+          <div class="form-group">
+            <textarea placeholder="必填" class="form-control" id="reply-reply-cnt" name="content" rows="2" required></textarea>
+          </div>
+          <fieldset class="form-group">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="idea" id="inlineRadio1-reply" value="1" required>
+              <label class="form-check-label" for="inlineRadio1-reply">证据</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="idea" id="inlineRadio2-reply" value="2" required>
+              <label class="form-check-label" for="inlineRadio2-reply">支持</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="idea" id="inlineRadio3-reply" value="3" required>
+              <label class="form-check-label" for="inlineRadio3-reply">反对</label>
+            </div>
+          </fieldset>
+        </form>
+        <button id="add-reply-reply-btn" class="btn btn-primary mb-3">
+          <span id="reply-reply-submit-loading" class="spinner-border spinner-border-sm" style="display: none"></span>
+          回复
+        </button>
+        <div class="reply-divider"></div>
+        {% endif %}
+        <div id="reply-reply-list-wrap" class=""></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          关闭
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 查看回复弹窗 end -->
 
 <!-- 声明详情 模板 -->
 <script id="claim-detail-template" type="text/html">
@@ -88,12 +141,80 @@
 <script id="claim-reply-template" type="text/html">
   <div class="list-group-item list-group-item-action flex-column align-items-start">
     <p class="mb-1">[replyContent]</p>
-    <span class="text-muted">
-      <small style="margin-right: 6px;">评论人: [replyCreator]</small>
-      <small>评论时间: [replyDate]</small>
-    </span>
+    <div class="reply-ops-wrap">
+      <span class="text-muted">
+        <small style="margin-right: 6px;">评论人: [replyCreator]</small>
+        <small>评论时间: [replyDate]</small>
+      </span>
+      <div id="claim-reply-item-[replyIndex]" data-toggle="modal" data-target="#lookReplyModal" data-whatever="[replyId]" class="text-muted reply-count-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-reply" viewBox="0 0 16 16">
+          <path d="M6.598 5.013a.144.144 0 0 1 .202.134V6.3a.5.5 0 0 0 .5.5c.667 0 2.013.005 3.3.822.984.624 1.99 1.76 2.595 3.876-1.02-.983-2.185-1.516-3.205-1.799a8.74 8.74 0 0 0-1.921-.306 7.404 7.404 0 0 0-.798.008h-.013l-.005.001h-.001L7.3 9.9l-.05-.498a.5.5 0 0 0-.45.498v1.153c0 .108-.11.176-.202.134L2.614 8.254a.503.503 0 0 0-.042-.028.147.147 0 0 1 0-.252.499.499 0 0 0 .042-.028l3.984-2.933zM7.8 10.386c.068 0 .143.003.223.006.434.02 1.034.086 1.7.271 1.326.368 2.896 1.202 3.94 3.08a.5.5 0 0 0 .933-.305c-.464-3.71-1.886-5.662-3.46-6.66-1.245-.79-2.527-.942-3.336-.971v-.66a1.144 1.144 0 0 0-1.767-.96l-3.994 2.94a1.147 1.147 0 0 0 0 1.946l3.994 2.94a1.144 1.144 0 0 0 1.767-.96v-.667z"/>
+        </svg>
+        <small style="margin-left: 1px;">查看回复</small>
+      </div>
+    </div>
   </div>
 </script>
+
+<!-- 回复列表 模板 -->
+<script id="look-reply-detail-template" type="text/html">
+  <div class="reply-reply-list-item">
+    <div class="reply-ops-wrap">
+      <h6>[replyPerson] <span class="text-muted">回复</span> [replyReplyPerson]</h6>
+      <span class="text-muted">
+        <small>[replyDate]</small>
+      </span>
+    </div>
+    <p class="mb-2">[replyContent]</p>
+    {% if current_user.is_authenticated %}
+    <span class="text-muted reply-count-wrap" data-toggle="collapse" data-target="#collapseExample-[index]" aria-expanded="false" aria-controls="collapseExample-[index]">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-reply" viewBox="0 0 16 16">
+        <path d="M6.598 5.013a.144.144 0 0 1 .202.134V6.3a.5.5 0 0 0 .5.5c.667 0 2.013.005 3.3.822.984.624 1.99 1.76 2.595 3.876-1.02-.983-2.185-1.516-3.205-1.799a8.74 8.74 0 0 0-1.921-.306 7.404 7.404 0 0 0-.798.008h-.013l-.005.001h-.001L7.3 9.9l-.05-.498a.5.5 0 0 0-.45.498v1.153c0 .108-.11.176-.202.134L2.614 8.254a.503.503 0 0 0-.042-.028.147.147 0 0 1 0-.252.499.499 0 0 0 .042-.028l3.984-2.933zM7.8 10.386c.068 0 .143.003.223.006.434.02 1.034.086 1.7.271 1.326.368 2.896 1.202 3.94 3.08a.5.5 0 0 0 .933-.305c-.464-3.71-1.886-5.662-3.46-6.66-1.245-.79-2.527-.942-3.336-.971v-.66a1.144 1.144 0 0 0-1.767-.96l-3.994 2.94a1.147 1.147 0 0 0 0 1.946l3.994 2.94a1.144 1.144 0 0 0 1.767-.96v-.667z"/>
+      </svg>
+      <small style="margin-left: 1px;">回复</small>
+    </span>
+    <div class="collapse mt-1" id="collapseExample-[index]">
+      <form id="addReplyReplyForm-[index]" class="needs-validation" novalidate>
+        <input type="hidden" name="replyId" value="[replyId]" />
+        <div class="form-group mb-2">
+          <textarea placeholder="回复 [replyPerson]" class="form-control" id="reply-reply-cnt-[index]" name="content" rows="2" required></textarea>
+        </div>
+        <fieldset class="form-group mb-2">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="idea" id="inlineRadio1-reply-[index]" value="1" required>
+            <label class="form-check-label" for="inlineRadio1-reply-[index]">证据</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="idea" id="inlineRadio2-reply-[index]" value="2" required>
+            <label class="form-check-label" for="inlineRadio2-reply-[index]">支持</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="idea" id="inlineRadio3-reply-[index]" value="3" required>
+            <label class="form-check-label" for="inlineRadio3-reply-[index]">反对</label>
+          </div>
+        </fieldset>
+      </form>
+      <button id="add-reply-reply-btn-[index]" onclick="submitReplyReply([index])" class="btn btn-outline-primary btn-sm">
+        <span id="reply-reply-submit-loading-[index]" class="spinner-border spinner-border-sm" style="display: none"></span>
+        回复
+      </button>
+    </div>
+    {% endif %}
+  </div>
+</script>
+
+<!-- <div>
+  <div class="reply-ops-wrap">
+    <h6>[replyPerson]</h6>
+    <span class="text-muted">
+      <small>[replyDate]</small>
+    </span>
+  </div>
+  <p class="mb-3">[replyContent]</p>
+  <div class="reply-divider"></div>
+  <div id="reply-reply-list-wrap" class=""></div>
+</div> -->
+
 {% endblock %} {% block js_source %}
 <script src="/static/js/claim.js"></script>
 {% endblock %}
