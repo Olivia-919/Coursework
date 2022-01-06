@@ -93,6 +93,7 @@ class TUser(UserMixin, db.Model):
 
     id = db.Column(db.BigInteger, primary_key=True, info='主键 自增')
     name = db.Column(db.String(20), info='用户账号')
+    display_name = db.Column(db.String(20), info='用户昵称')
     password = db.Column(db.String(50), info='用户密码')
     sex = db.Column(db.Integer, info='性别 1-男 0-女')
     gmt_create = db.Column(db.DateTime, default=datetime.datetime.now, info='注册时间')

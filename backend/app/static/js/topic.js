@@ -64,7 +64,7 @@ addEventLoad(function() {
     fetchTopicServer();
   }, 500)
 
-  // 登录表单校验
+  // 发表声明表单校验
   function validateForm() {
     return new Promise((resolve, reject) => {
       let flag = true;

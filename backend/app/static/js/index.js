@@ -47,7 +47,7 @@ addEventLoad(function () {
     $("#addTopicSubmitBtn").attr("disabled", false);
   });
 
-  // 登录表单校验
+  // 保存主题表单 校验
   function validateForm() {
     return new Promise((resolve, reject) => {
       let flag = true;

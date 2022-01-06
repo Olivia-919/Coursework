@@ -217,11 +217,15 @@ def api_add_topic():
 # 【api】查询主题列表
 @app.route('/api/queryTopics', methods=['GET'])
 def api_query_topics():
+    # 拿到前端传过来的 搜索关键词
     keyword = request.args.get('q')
+    # 搜索条件 is_delete = 0
     filters = [TTopic.is_delete==0]
+    # 如果 有搜索关键词
     if keyword:
         k = '%' + keyword + '%'
         filters.append(TTopic.name.like(k))
+    # 去库里查询
     topics = db.session.query(TTopic).filter(*filters).order_by(TTopic.gmt_modify.desc()).all()
     topiclist = []
     for topic in topics:

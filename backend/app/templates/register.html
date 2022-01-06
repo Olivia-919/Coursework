@@ -36,6 +36,15 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="name">用户昵称</label>
+                        <input type="text" class="form-control" id="display_name" name="display_name" placeholder="用户昵称" maxlength="16" required>
+                        <small class="text-muted">不超过16位字符</small>
+                        <div class="invalid-feedback" style="width: 100%;">
+                            请输入有效的用户昵称
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
                         <label for="password">密码</label>
                         <input type="password" class="form-control" id="password" name="password" placeholder="密码" required>
                         <small class="text-muted">支持6 ～ 20位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符</small>
@@ -79,10 +88,13 @@
     </div>
 
     <script>
+        // 防止 csrf 攻击，设置csrf token，页面的post请求 必须把token放到请求header中
         const _token = '{{ csrf_token() }}';
         window.onload = function() {
             const form = document.getElementById('register-form');
+            // 校验 用户账号的正则表达式
             const name_reg = /^[a-zA-Z0-9_-]{4,16}$/;
+            // 校验 密码的正则表达式
             const pwd_reg = /^.*(?=.{6,20})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/;
 
             function validateForm() {
@@ -91,15 +103,23 @@
                     if (form.checkValidity() === false) {
                         flag = false;
                     }
-
+                    //form.classList.add('was-validated');
                     const nameVal = $('#name').val();
                     const pwdVal = $('#password').val();
+                    const displayName = $('#display_name').val();
                     const confirmVal = $('#confirm_pwd').val()
 
                     if (nameVal && name_reg.test(nameVal)) {
                         $('#name').removeClass('is-invalid');
                     } else {
                         $('#name').addClass('is-invalid');
+                        flag = false;
+                    }
+
+                    if (displayName) {
+                        $('#display_name').removeClass('is-invalid');
+                    } else {
+                        $('#display_name').addClass('is-invalid');
                         flag = false;
                     }
 

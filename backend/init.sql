@@ -48,6 +48,7 @@ CREATE TABLE `t_topic`  (
 CREATE TABLE `t_user`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键 自增',
   `name` varchar(20) NULL COMMENT '用户账号',
+  `display_name` varchar(20) NULL COMMENT '用户昵称',
   `password` varchar(50) NULL COMMENT '用户密码',
   `sex` int NULL COMMENT '性别 1-男 0-女',
   `gmt_create` datetime NULL COMMENT '注册时间',
